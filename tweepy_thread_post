@@ -1,0 +1,37 @@
+import tweepy
+
+client = tweepy.Client(consumer_key = 'YOUR CONSUMER KEY',
+					   consumer_secret = "YOUR CONSUMER SECRET KEY",
+					   access_token = "YOUR ACCESS TOKEN",
+					   access_token_secret = "YOUR ACCESS SECRET TOKEN")
+
+def tweepy_thread_post(text, char_limit):
+	
+	sentences = text.split(". ")
+
+	# Groups consecutive sentences together as long as char limit is not exceeded
+	grouped_sentence_list = [sentences[0]]
+	counter = 1
+	while counter < len(sentences):
+		if len(grouped_sentences[-1]) + len(sentences[counter]) < (char_limit-5):
+			joined_sentences = ". ".join([grouped_sentence_list[-1],sentences[counter]])
+			grouped_sentence_list.append(joined_sentences)
+			grouped_sentence_list.pop(-2)
+			counter += 1
+		else:
+			grouped_sentence_list.append(sentences[counter].strip())
+			counter += 1
+	
+	# Count number of chunks
+	num_tweets = len(grouped_sentence_list)
+	
+	# Tweets first chunk
+	first_tweet = client.create_tweet(text = grouped_sentence_list[0] + ". (1/" + str(num_tweets) + ")")
+	first_tweet_id = first_tweet.data['id']
+	
+	# Tweets remaining chunks as reply to first chunk
+	for i in range(1, num_tweets):
+		if i == num_tweets - 1:
+			client.create_tweet(text = grouped_sentence_list[i] + " (" + str(i+1) + "/" + str(num_tweets) + ")", in_reply_to_tweet_id = first_tweet_id)
+		else:
+			client.create_tweet(text = grouped_sentence_list[i] + ". (" + str(i+1) + "/" + str(num_tweets) + ")", in_reply_to_tweet_id = first_tweet_id)
