@@ -1,9 +1,9 @@
 import tweepy
 
 client = tweepy.Client(consumer_key = 'YOUR CONSUMER KEY',
-					   consumer_secret = "YOUR CONSUMER SECRET KEY",
-					   access_token = "YOUR ACCESS TOKEN",
-					   access_token_secret = "YOUR ACCESS SECRET TOKEN")
+                       consumer_secret = "YOUR CONSUMER SECRET KEY",
+                       access_token = "YOUR ACCESS TOKEN",
+	               access_token_secret = "YOUR ACCESS SECRET TOKEN")
 
 def tweepy_thread_post(text, char_limit):
 	
